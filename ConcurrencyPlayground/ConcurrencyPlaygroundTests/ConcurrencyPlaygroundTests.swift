@@ -27,6 +27,29 @@ final class ConcurrencyPlaygroundTests: XCTestCase {
         }
     }
     
+    func testRaceData() {
+        runAsyncTest { [weak self] in
+            guard let self else {
+                return
+            }
+            
+            Task {
+                for _ in 1...100 {
+                    await self.account1.deposit(amount: 1)
+                }
+            }
+
+            Task {
+                for _ in 1...100 {
+                    await self.account1.withdraw(amount: 1)
+                }
+            }
+            
+            let result = await self.account1.balanceConfig()
+            XCTAssertEqual(result, 100, "모든 거래 후 잔액이 1000이어야 합니다")
+        }
+    }
+    
     private func transfer(amount: Int, from: BankAccount, to: BankAccount) async throws {
         // 인출 후
         let available = await from.withdraw(amount: amount)

@@ -18,6 +18,7 @@
 		D7E57C022B13272E00C15EF9 /* BankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E57C012B13272E00C15EF9 /* BankAccount.swift */; };
 		D7E57C052B132AB000C15EF9 /* BankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E57C012B13272E00C15EF9 /* BankAccount.swift */; };
 		D7E57C072B132DA900C15EF9 /* XCTestCase+AsyncTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E57C062B132DA900C15EF9 /* XCTestCase+AsyncTest.swift */; };
+		D7E57C092B132FA500C15EF9 /* BankAccountClassVersionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E57C082B132FA500C15EF9 /* BankAccountClassVersionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		D7E57BFC2B1313B400C15EF9 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		D7E57C012B13272E00C15EF9 /* BankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccount.swift; sourceTree = "<group>"; };
 		D7E57C062B132DA900C15EF9 /* XCTestCase+AsyncTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+AsyncTest.swift"; sourceTree = "<group>"; };
+		D7E57C082B132FA500C15EF9 /* BankAccountClassVersionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountClassVersionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				D7E57BE32B13137D00C15EF9 /* ConcurrencyPlaygroundTests.swift */,
+				D7E57C082B132FA500C15EF9 /* BankAccountClassVersionTests.swift */,
 				D7E57C062B132DA900C15EF9 /* XCTestCase+AsyncTest.swift */,
 			);
 			path = ConcurrencyPlaygroundTests;
@@ -287,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7E57BE42B13137D00C15EF9 /* ConcurrencyPlaygroundTests.swift in Sources */,
+				D7E57C092B132FA500C15EF9 /* BankAccountClassVersionTests.swift in Sources */,
 				D7E57C052B132AB000C15EF9 /* BankAccount.swift in Sources */,
 				D7E57C072B132DA900C15EF9 /* XCTestCase+AsyncTest.swift in Sources */,
 			);
