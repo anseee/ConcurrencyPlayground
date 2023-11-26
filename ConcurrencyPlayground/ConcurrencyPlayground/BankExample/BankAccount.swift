@@ -22,6 +22,7 @@ actor BankAccount {
     }
     
     /// 인출
+    @discardableResult
     func withdraw(amount: Int) -> Int {
         // 현금 인출이 가능하면
         if balance >= amount {
@@ -59,6 +60,7 @@ class BankAccountClassVersion {
     }
     
     /// 인출
+    @discardableResult
     func withdraw(amount: Int) -> Int {
         // 현금 인출이 가능하면
         if balance >= amount {
@@ -82,3 +84,147 @@ class BankAccountClassVersion {
     }
 }
 
+final class BankAccountDispatchQueue {
+    private var balance: Int
+    private let queue = DispatchQueue(label: "com.bankAccount.serialQueue")
+
+    init(balance: Int) {
+        self.balance = balance
+    }
+
+    func deposit(amount: Int) {
+        queue.sync {
+            self.balance += amount
+        }
+    }
+
+    @discardableResult
+    func withdraw(amount: Int) -> Int {
+        queue.sync {
+            if self.balance >= amount {
+                self.balance -= amount
+                return amount
+            } else {
+                let available = self.balance
+                self.balance = 0
+                return available
+            }
+        }
+    }
+}
+
+final class BankAccountSemaphore {
+    private var balance: Int
+    private let semaphore = DispatchSemaphore(value: 1)
+
+    init(balance: Int) {
+        self.balance = balance
+    }
+
+    func deposit(amount: Int) {
+        semaphore.wait()
+        self.balance += amount
+        semaphore.signal()
+    }
+
+    @discardableResult
+    func withdraw(amount: Int) -> Int {
+        semaphore.wait()
+        defer { semaphore.signal() }
+
+        if self.balance >= amount {
+            self.balance -= amount
+            return amount
+        } else {
+            let available = self.balance
+            self.balance = 0
+            return available
+        }
+    }
+}
+
+final class BankAccountLock {
+    private var balance: Int
+    private let lock = NSLock()
+
+    init(balance: Int) {
+        self.balance = balance
+    }
+
+    func deposit(amount: Int) {
+        lock.lock()
+        self.balance += amount
+        lock.unlock()
+    }
+
+    @discardableResult
+    func withdraw(amount: Int) -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+
+        if self.balance >= amount {
+            self.balance -= amount
+            return amount
+        } else {
+            let available = self.balance
+            self.balance = 0
+            return available
+        }
+    }
+    
+    /// 데드락 발생!
+    func transfer(amount: Int, to account: BankAccountLock) {
+        lock.lock()
+        defer { lock.unlock() }
+        account.lock.lock()
+        defer { account.lock.unlock() }
+        
+        withdraw(amount: amount)
+        account.deposit(amount: amount)
+    }
+}
+
+final class BankAccountRecursiveLock {
+    private var balance: Int
+    private let lock = NSRecursiveLock()
+
+    init(balance: Int) {
+        self.balance = balance
+    }
+
+    func deposit(amount: Int) {
+        lock.lock()
+        self.balance += amount
+        lock.unlock()
+    }
+
+    @discardableResult
+    func withdraw(amount: Int) -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+
+        if self.balance >= amount {
+            self.balance -= amount
+            return amount
+        } else {
+            let available = self.balance
+            self.balance = 0
+            return available
+        }
+    }
+
+    func autoAdjustBalance(target: Int) {
+        lock.lock()
+        defer { lock.unlock() }
+        
+        if balance < target {
+            // 목표 잔액에 도달할 때까지 계속 입금
+            deposit(amount: 1)
+            autoAdjustBalance(target: target)
+        } else if balance > target {
+            // 목표 잔액이 초과될 경우 계속 인출
+            withdraw(amount: 1)
+            autoAdjustBalance(target: target)
+        }
+    }
+}
